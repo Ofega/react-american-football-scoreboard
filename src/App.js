@@ -2,51 +2,79 @@ import React, { useState } from "react";
 import "./App.css";
 import BottomRow from "./BottomRow";
 
+
+// FUNCTIONAL COMPONENT FOR TEAM DETAILS
+function TeamSummary(props) {
+  return (
+    <div className={props.status}>
+      <h2 className={`${props.status}__name`}>{props.name}</h2>
+      <div className={`${props.status}__score`}>{props.score}</div>
+    </div>
+  )
+}
+
+// FUNCTIONAL COMPONENT FOR SCORE BUTTONS: TOUCHDOWN & FIELD GOAL
+function ScoreButton(props) {
+
+  // CAPITALIZE FIRST LETTER OF STATUS :)
+  const status = props.status.charAt(0).toUpperCase() + props.status.slice(1);
+
+  return(
+    <div className={`${props.status}Buttons`}>
+      {/* TOUCHDOWN BUTTON */}
+      <button 
+        className={`${props.status}Buttons__touchdown`} 
+        onClick={() => props.handleClick(props.name, 7)}
+      > 
+        {`${status} Touchdown`} 
+      </button>
+
+      {/* FIELD GOAL BUTTON */}
+      <button 
+        className={`${props.status}Buttons__fieldGoal`} 
+        onClick={() => props.handleClick(props.name, 3)}
+      > 
+        {`${status} Field Goal`} 
+      </button>
+    </div>
+  )
+}
+
+// FUNCTIONAL COMPONENT FOR THE APP
 function App() {
+  
+  //  SET UP STATE FOR THE TWO TEAMS
+  const [team1, setTeam1Score] = useState({
+    name: 'Lions',
+    score: 0,
+    status: 'home'
+  });
+  const [team2, setTeam2Score] = useState({
+    name: 'Tigers',
+    score: 0,
+    status: 'away'
+  });
 
-  const [homeScore, setHomeScore] = useState(0);
-  const [awayScore, setAwayScore] = useState(0);
-
-  const homeTouchDown = () => {
-    setHomeScore(homeScore + 7);
-  }
-  const homeFieldGoal = () => {
-    setHomeScore(homeScore + 3);
-  }
-
-  const awayTouchDown = () => {
-    setAwayScore(awayScore + 7);
-  }
-  const awayFieldGoal = () => {
-    setAwayScore(awayScore + 3);
+  // HANDLER FUNCTION TO UPDATE SCORE ON CLICK
+  const setScore = (teamName, amount) => {
+    teamName === team1.name ?
+      setTeam1Score({ ...team1, score: team1.score + amount }) :
+      setTeam2Score({ ...team2, score: team2.score + amount });
   }
 
   return (
     <div className="container">
       <section className="scoreboard">
         <div className="topRow">
-          <div className="home">
-            <h2 className="home__name">Lions</h2>
-            <div className="home__score">{homeScore}</div>
-          </div>
+          <TeamSummary status={team1.status} name={team1.name} score={team1.score} />
           <div className="timer">00:03</div>
-          <div className="away">
-            <h2 className="away__name">Tigers</h2>
-            <div className="away__score">{awayScore}</div>
-          </div>
+          <TeamSummary status={team2.status} name={team2.name} score={team2.score} />
         </div>
         <BottomRow />
       </section>
       <section className="buttons">
-        <div className="homeButtons">
-          {/* TODO STEP 4 - Now we need to attach our state setter functions to click listeners. */}
-          <button className="homeButtons__touchdown" onClick={homeTouchDown}>Home Touchdown</button>
-          <button className="homeButtons__fieldGoal" onClick={homeFieldGoal}>Home Field Goal</button>
-        </div>
-        <div className="awayButtons">
-          <button className="awayButtons__touchdown" onClick={awayTouchDown}>Away Touchdown</button>
-          <button className="awayButtons__fieldGoal" onClick={awayFieldGoal}>Away Field Goal</button>
-        </div>
+        <ScoreButton status={team1.status} name={team1.name} handleClick={setScore} />
+        <ScoreButton status={team2.status} name={team2.name} handleClick={setScore} />
       </section>
     </div>
   );
