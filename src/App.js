@@ -22,18 +22,12 @@ function ScoreButton(props) {
   return(
     <div className={`${props.status}Buttons`}>
       {/* TOUCHDOWN BUTTON */}
-      <button 
-        className={`${props.status}Buttons__touchdown`} 
-        onClick={() => props.handleClick(props.name, 7)}
-      > 
+      <button className={`${props.status}Buttons__touchdown`} onClick={() => props.handleClick(props.name, 7)}> 
         {`${status} Touchdown`} 
       </button>
 
       {/* FIELD GOAL BUTTON */}
-      <button 
-        className={`${props.status}Buttons__fieldGoal`} 
-        onClick={() => props.handleClick(props.name, 3)}
-      > 
+      <button className={`${props.status}Buttons__fieldGoal`} onClick={() => props.handleClick(props.name, 3)}> 
         {`${status} Field Goal`} 
       </button>
     </div>
@@ -42,7 +36,7 @@ function ScoreButton(props) {
 
 // FUNCTIONAL COMPONENT FOR THE APP
 function App() {
-  
+
   //  SET UP STATE FOR THE TWO TEAMS
   const [team1, setTeam1Score] = useState({
     name: 'Lions',
