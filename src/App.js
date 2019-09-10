@@ -1,40 +1,74 @@
-//TODO: STEP 1 - Import the useState hook.
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import BottomRow from "./BottomRow";
 
+
+// FUNCTIONAL COMPONENT FOR TEAM DETAILS
+function TeamSummary(props) {
+  return (
+    <div className={props.status}>
+      <h2 className={`${props.status}__name`}>{props.name}</h2>
+      <div className={`${props.status}__score`}>{props.score}</div>
+    </div>
+  )
+}
+
+// FUNCTIONAL COMPONENT FOR SCORE BUTTONS: TOUCHDOWN & FIELD GOAL
+function ScoreButton(props) {
+
+  // CAPITALIZE FIRST LETTER OF STATUS :)
+  const status = props.status.charAt(0).toUpperCase() + props.status.slice(1);
+
+  return(
+    <div className={`${props.status}Buttons`}>
+      {/* TOUCHDOWN BUTTON */}
+      <button className={`${props.status}Buttons__touchdown`} onClick={() => props.handleClick(props.name, 7)}> 
+        {`${status} Touchdown`} 
+      </button>
+
+      {/* FIELD GOAL BUTTON */}
+      <button className={`${props.status}Buttons__fieldGoal`} onClick={() => props.handleClick(props.name, 3)}> 
+        {`${status} Field Goal`} 
+      </button>
+    </div>
+  )
+}
+
+// FUNCTIONAL COMPONENT FOR THE APP
 function App() {
-  //TODO: STEP 2 - Establish your applictaion's state with some useState hooks.  You'll need one for the home score and another for the away score.
+
+  //  SET UP STATE FOR THE TWO TEAMS
+  const [team1, setTeam1Score] = useState({
+    name: 'Lions',
+    score: 0,
+    status: 'home'
+  });
+  const [team2, setTeam2Score] = useState({
+    name: 'Tigers',
+    score: 0,
+    status: 'away'
+  });
+
+  // HANDLER FUNCTION TO UPDATE SCORE ON CLICK
+  const setScore = (teamName, amount) => {
+    teamName === team1.name ?
+      setTeam1Score({ ...team1, score: team1.score + amount }) :
+      setTeam2Score({ ...team2, score: team2.score + amount });
+  }
 
   return (
     <div className="container">
       <section className="scoreboard">
         <div className="topRow">
-          <div className="home">
-            <h2 className="home__name">Lions</h2>
-
-            {/* TODO STEP 3 - We need to change the hardcoded values in these divs to accept dynamic values from our state. */}
-
-            <div className="home__score">32</div>
-          </div>
+          <TeamSummary status={team1.status} name={team1.name} score={team1.score} />
           <div className="timer">00:03</div>
-          <div className="away">
-            <h2 className="away__name">Tigers</h2>
-            <div className="away__score">32</div>
-          </div>
+          <TeamSummary status={team2.status} name={team2.name} score={team2.score} />
         </div>
         <BottomRow />
       </section>
       <section className="buttons">
-        <div className="homeButtons">
-          {/* TODO STEP 4 - Now we need to attach our state setter functions to click listeners. */}
-          <button className="homeButtons__touchdown">Home Touchdown</button>
-          <button className="homeButtons__fieldGoal">Home Field Goal</button>
-        </div>
-        <div className="awayButtons">
-          <button className="awayButtons__touchdown">Away Touchdown</button>
-          <button className="awayButtons__fieldGoal">Away Field Goal</button>
-        </div>
+        <ScoreButton status={team1.status} name={team1.name} handleClick={setScore} />
+        <ScoreButton status={team2.status} name={team2.name} handleClick={setScore} />
       </section>
     </div>
   );
